@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to FAZIO store where you can buy different items....
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} - FAZIO Store
+    {% else %}
+        See our New collection - FAZIO store
+    {% endif %}
+{% endblock %}
+{% block content %}
+    {% if category %}
+    <div xmlns="http://www.w3.org/1999/html">
+        <div class="row my_row_class">
+            <div class="mx-auto">
+                <p><a href="{% url 'ecommerceapp:allProdCat' %}">Our Product Collections</a></p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="mx_auto">
+        {% if category %}
+        <img class="my_image" src="{{ category.image.url }}" alt="{{ category.name }}" width="500px;" height="500px;">
+    </div>
+    <br>
+    <div>
+        <h1 class="text-center my_title">{{ category.name }}</h1>
+        <p class="text-justify">{{ category.description }}</p>
+    </div>
+    {% else %}
+    <div>
+        <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="Our Product" width="1250px;" height="400px;">
+    </div>
+    <br>
+    <div>
+        <h1 class="text-center my_title">Our Product Content</h1>
+        <p class="text-justify">Fazio is a one-stop shop for all your fashion and lifestyle needs. Being India's largest e-commerce store for fashion and lifestyle products, Fazio aims at providing a hassle-free and enjoyable shopping experience to shoppers across the country with the widest range of brands and products on its portal.</p>
+    </div>
+    {% endif %}
+    <div class="container">
+        <div class="row mx_auto">
+            {% for product in products.object_list %}
+            <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+                <div class="card text-center" style="min-width: 18rem;">
+                    <a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.image.url}}" alt="{{ product.name }}" width="125px;" height="125px;"></a>
+                    <div class="card-body">
+                        <h4>{{ product.name }}</h4>
+                        <p>{{ product.price }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+        <hr>
+        <div class="text-center">
+            <ul class="pagination">
+                {% for pg in products.paginator.page_range %}
+                <li class="page-item{% if products.number == pg %} active{% endif %}">
+                    <a href="?page={{ pg }}" class="page-link">{{ pg }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    <br>
+    </div>
+{% endblock %}
